@@ -1,0 +1,25 @@
+name: Deploy Workflow
+on:
+  push:
+    branches:
+      - master
+ 
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+      - run: docker build -t jsfreitas/react-test -f ./client/Dockerfile.dev ./client
+      - run: docker run -e CI=true jsfreitas/react-test npm test
+
+      - name: Build production images
+        run: docker build -t jsfreitas/multi-client ./client
+        run: docker build -t jsfreitas/multi-nginx ./nginx
+        run: docker build -t jsfreitas/multi-server ./server
+        run: docker build -t jsfreitas/multi-worker ./worker
+        # Take those images and push them to docker hub
+        run: docker push jsfreitas/multi-client
+        run: docker push jsfreitas/multi-nginx
+        run: docker push jsfreitas/multi-server
+        run: docker push jsfreitas/multi-worker
