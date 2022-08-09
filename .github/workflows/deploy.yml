@@ -13,14 +13,26 @@ jobs:
       - run: docker build -t jsfreitas/react-test -f ./client/Dockerfile.dev ./client
       - run: docker run -e CI=true jsfreitas/react-test npm test
 
-      - name: Generate images
+      - name: Generate client image
         run: docker build -t jsfreitas/multi-client ./client
-        run: docker build -t jsfreitas/multi-nginx ./nginx
-        run: docker build -t jsfreitas/multi-server ./server
-        run: docker build -t jsfreitas/multi-worker ./worker
 
-      - name: Push docker hub
+      - name: Generate nginx image
+        run: docker build -t jsfreitas/multi-nginx ./nginx
+
+      - name: Generate server image
+        run: docker build -t jsfreitas/multi-server ./server
+
+      - name: Generate worker image
+        run: docker build -t jsfreitas/multi-worker ./worker
+        
+      - name: Push docker hub client image
         run: docker push jsfreitas/multi-client
+
+      - name: Push docker hub nginx image
         run: docker push jsfreitas/multi-nginx
+
+      - name: Push docker hub server image
         run: docker push jsfreitas/multi-server
+
+      - name: Push docker hub worker image
         run: docker push jsfreitas/multi-worker
