@@ -46,4 +46,3 @@ jobs:
           existing_bucket_name: elasticbeanstalk-sa-east-1-717881505697
           region: sa-east-1
           version_label: ${{ github.sha }}
-          deployment_package: deploy.zip
