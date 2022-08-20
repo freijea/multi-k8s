@@ -5,6 +5,11 @@ on:
     branches:
     - master
 
+env:
+  PROJECT_ID: ${{ secrets.GKE_PROJECT }}
+  GKE_CLUSTER: multi-cluster    # TODO: update to cluster name
+  GKE_ZONE: southamerica-east1-b	   # TODO: update to cluster zone
+
 jobs:
   setup-and-deploy:
     name: Setup and Deploy
@@ -20,6 +25,8 @@ jobs:
       uses: actions/checkout@v3
 
     - run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+    - run: docker build -t jsfreitas/react-test -f ./client/Dockerfile.dev ./client
+    - run: docker run -e CI=true cygnetops/react-test npm test
     # Configure Workload Identity Federation and generate an access token.
 
     - id: 'auth'
