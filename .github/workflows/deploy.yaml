@@ -6,12 +6,11 @@ on:
     - master
 
 env:
-  global:
-    - SHA: $(git rev-parse HEAD)
-    - CLOUDSDK_CORE_DISABLE_PROMPTS: 1
-    - PROJECT_ID: ${{ secrets.GKE_PROJECT }}
-    - GKE_CLUSTER: multi-cluster    # TODO: update to cluster name
-    - GKE_ZONE: southamerica-east1-b	   # TODO: update to cluster zone
+  SHA: $(git rev-parse HEAD)
+  CLOUDSDK_CORE_DISABLE_PROMPTS: 1
+  PROJECT_ID: ${{ secrets.GKE_PROJECT }}
+  GKE_CLUSTER: multi-cluster    # TODO: update to cluster name
+  GKE_ZONE: southamerica-east1-b	   # TODO: update to cluster zone
 
 jobs:
   setup-and-deploy:
