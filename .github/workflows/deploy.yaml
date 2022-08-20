@@ -6,7 +6,7 @@ on:
     - master
 
 env:
-  SHA: $(git rev-parse --short "$GITHUB_SHA")
+  SHA: ${{ github.sha }}
   CLOUDSDK_CORE_DISABLE_PROMPTS: 1
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
   GKE_CLUSTER: multi-cluster    # TODO: update to cluster name
