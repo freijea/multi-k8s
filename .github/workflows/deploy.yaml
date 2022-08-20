@@ -6,9 +6,12 @@ on:
     - master
 
 env:
-  PROJECT_ID: ${{ secrets.GKE_PROJECT }}
-  GKE_CLUSTER: multi-cluster    # TODO: update to cluster name
-  GKE_ZONE: southamerica-east1-b	   # TODO: update to cluster zone
+  global:
+    - SHA: $(git rev-parse HEAD)
+    - CLOUDSDK_CORE_DISABLE_PROMPTS: 1
+    - PROJECT_ID: ${{ secrets.GKE_PROJECT }}
+    - GKE_CLUSTER: multi-cluster    # TODO: update to cluster name
+    - GKE_ZONE: southamerica-east1-b	   # TODO: update to cluster zone
 
 jobs:
   setup-and-deploy:
@@ -26,8 +29,12 @@ jobs:
 
     - run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
     - run: docker build -t jsfreitas/react-test -f ./client/Dockerfile.dev ./client
-    - run: docker run -e CI=true cygnetops/react-test npm test
+    # - run: docker run -e CI=true cygnetops/react-test npm test
     # Configure Workload Identity Federation and generate an access token.
+
+    - name: Build deployment process
+      run: sh ./deploy.sh
+      shell: bash
 
     - id: 'auth'
       name: 'Authenticate to Google Cloud'
@@ -38,3 +45,7 @@ jobs:
     # Setup gcloud CLI
     - name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@v0
+
+    # Get the GKE credentials so we can deploy to the cluster
+    - run: |-
+        gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
