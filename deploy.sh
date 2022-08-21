@@ -8,8 +8,3 @@ docker push jsfreitas/multi-server:latest
 docker push jsfreitas/multi-client:$SHA
 docker push jsfreitas/multi-worker:$SHA
 docker push jsfreitas/multi-server:$SHA
-
-kubectl apply -f k8s
-kubectl set image deployments/server-deployment server=jsfreitas/multi-server:$SHA
-kubectl set image deployments/client-deployment client=jsfreitas/multi-client:$SHA
-kubectl set image deployments/worker-deployment worker=jsfreitas/multi-worker:$SHA
