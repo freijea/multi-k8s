@@ -48,6 +48,7 @@ jobs:
     # Get the GKE credentials so we can deploy to the cluster
     - run: |-
         gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
+        kubectl delete secret pgpassword
         kubectl create secret generic pgpassword --from-literal PGPASSWORD=${{ secrets.PGPASSWORD }}
         kubectl apply -f k8s
         kubectl set image deployments/server-deployment server=jsfreitas/multi-server:$SHA
