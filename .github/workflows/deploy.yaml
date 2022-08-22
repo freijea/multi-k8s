@@ -48,10 +48,13 @@ jobs:
     # Get the GKE credentials so we can deploy to the cluster
     - run: |-
         gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
+        kubectl create secret generic pgpassword --from-literal PGPASSWORD=${{ secrets.PGPASSWORD }}
         kubectl apply -f k8s
         kubectl set image deployments/server-deployment server=jsfreitas/multi-server:$SHA
         kubectl set image deployments/client-deployment client=jsfreitas/multi-client:$SHA
         kubectl set image deployments/worker-deployment worker=jsfreitas/multi-worker:$SHA
+        kubectl rollout status deployment/ $ (kubectl get deployments)
+        kubectl get services -o wide
 
 
     # In the shell in Google Cloud Console Shell runs   gcloud config set project [PROJECT_ID]
