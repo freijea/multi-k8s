@@ -48,6 +48,12 @@ jobs:
     # Get the GKE credentials so we can deploy to the cluster
     - run: |-
         gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
+        curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+        chmod 700 get_helm.sh
+        ./get_helm.sh
+        kubectl create serviceaccount --namespace kube-system tiller || true
+        kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller || true
+        helm init --service-account tiller --upgrade
         kubectl apply -f k8s
         kubectl set image deployments/server-deployment server=jsfreitas/multi-server:$SHA
         kubectl set image deployments/client-deployment client=jsfreitas/multi-client:$SHA
