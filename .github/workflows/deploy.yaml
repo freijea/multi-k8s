@@ -54,8 +54,6 @@ jobs:
         ./get_helm.sh
         helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
         helm upgrade my-release ingress-nginx/ingress-nginx --install
-        kubectl delete secret pgpassword --ignore-not-found=true
-        kubectl create secret generic pgpassword --from-literal PGPASSWORD="PGPASSWORD"
         kubectl apply -f k8s
         kubectl set image deployments/server-deployment server=jsfreitas/multi-server:$SHA
         kubectl set image deployments/client-deployment client=jsfreitas/multi-client:$SHA
