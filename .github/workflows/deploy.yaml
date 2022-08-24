@@ -54,6 +54,14 @@ jobs:
         ./get_helm.sh
         helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
         helm upgrade my-release ingress-nginx/ingress-nginx --install
+        helm repo add jetstack https://charts.jetstack.io
+        helm repo update
+        helm upgrade \
+          cert-manager jetstack/cert-manager \
+          --namespace cert-manager \
+          --create-namespace \
+          --version v1.8.0 \
+          --set installCRDs=true
         kubectl apply -f k8s
         kubectl set image deployments/server-deployment server=jsfreitas/multi-server:$SHA
         kubectl set image deployments/client-deployment client=jsfreitas/multi-client:$SHA
