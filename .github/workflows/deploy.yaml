@@ -61,7 +61,7 @@ jobs:
           --namespace cert-manager \
           --create-namespace \
           --version v1.8.0 \
-          --set installCRDs=false
+          --set installCRDs=false \
           --install
         kubectl apply -f k8s
         kubectl set image deployments/server-deployment server=jsfreitas/multi-server:$SHA
