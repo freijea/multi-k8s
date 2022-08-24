@@ -62,6 +62,7 @@ jobs:
           --create-namespace \
           --version v1.8.0 \
           --set installCRDs=true
+          --install
         kubectl apply -f k8s
         kubectl set image deployments/server-deployment server=jsfreitas/multi-server:$SHA
         kubectl set image deployments/client-deployment client=jsfreitas/multi-client:$SHA
