@@ -5,11 +5,17 @@ metadata:
   name: ingress-service
   annotations:
     kubernetes.io/ingress.class: 'nginx'
+    kubernetes.io/ingress.allow-http: "true"
     nginx.ingress.kubernetes.io/use-regex: 'true'
     # ADD ANNOTATION
     nginx.ingress.kubernetes.io/rewrite-target: /$1
+    cert-manager.io/issuer: letsencrypt-staging
     # UPDATE ANNOTATION
 spec:
+  tls:
+    - secretName: web-ssl
+      hosts:
+        - jsfreitas.dev
   rules:
     - http:
         paths:
