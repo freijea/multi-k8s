@@ -5,19 +5,44 @@ metadata:
   name: ingress-service
   annotations:
     kubernetes.io/ingress.class: 'nginx'
-    kubernetes.io/ingress.allow-http: "true"
     nginx.ingress.kubernetes.io/use-regex: 'true'
     # ADD ANNOTATION
     nginx.ingress.kubernetes.io/rewrite-target: /$1
     cert-manager.io/issuer: letsencrypt-staging
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
     # UPDATE ANNOTATION
 spec:
   tls:
     - secretName: web-ssl
       hosts:
         - jsfreitas.dev
+        - www.jsfreitas.dev
   rules:
-    - http:
+    - host: jsfreitas.dev
+      http:
+        paths:
+          - path: /?(.*)
+            # UPDATE PATH
+            pathType: Prefix
+            # ADD PATHTYPE
+            backend:
+              service:
+                # UPDATE SERVICE FIELDS
+                name: client-cluster-ip-service
+                port:
+                  number: 3000
+          - path: /api/?(.*)
+            # UPDATE PATH
+            pathType: Prefix
+            # ADD PATHTYPE
+            backend:
+              service:
+                # UPDATE SERVICE FIELDS
+                name: server-cluster-ip-service
+                port:
+                  number: 5000
+    - host: www.jsfreitas.dev
+      http:
         paths:
           - path: /?(.*)
             # UPDATE PATH
