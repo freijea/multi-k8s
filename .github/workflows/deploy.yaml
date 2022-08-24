@@ -47,7 +47,8 @@ jobs:
       uses: google-github-actions/setup-gcloud@v0
 
     # Get the GKE credentials so we can deploy to the cluster
-    - run: |-
+    - name: Deploy GKE
+      run: |-
         gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
         curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
         chmod 700 get_helm.sh
